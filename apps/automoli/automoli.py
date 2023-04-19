@@ -1,26 +1,26 @@
 """AutoMoLi.
    Automatic Motion Lights
-  @benleb / https://github.com/benleb/ad-automoli
+  @legovaer / https://github.com/legovaer/ad-automoli
 """
 
 from __future__ import annotations
 
 import asyncio
+import logging
+import random
 from collections.abc import Coroutine, Iterable
 from copy import deepcopy
 from datetime import time
 from distutils.version import StrictVersion
 from enum import Enum, IntEnum
 from inspect import stack
-import logging
 from pprint import pformat
-import random
 from typing import Any
 
-# pylint: disable=import-error
-import hassapi as hass
+import version
 
-__version__ = "0.11.3"
+# pylint: disable=import-error
+from appdaemon.plugins.hass.hassapi import Hass
 
 APP_NAME = "AutoMoLi"
 APP_ICON = "💡"
@@ -85,8 +85,8 @@ def install_pip_package(
 ) -> None:
     import importlib
     import site
-    from subprocess import check_call  # nosec
     import sys
+    from subprocess import check_call  # nosec
 
     try:
         importlib.import_module(pkg)
@@ -122,8 +122,8 @@ def install_pip_package(
 
 # install adutils library
 install_pip_package("adutils", version=">=0.6.2")
-from adutils import Room, hl, natural_time, py38_or_higher, py39_or_higher  # noqa
 from adutils import py37_or_higher  # noqa
+from adutils import Room, hl, natural_time, py38_or_higher, py39_or_higher  # noqa
 
 
 class DimMethod(IntEnum):
@@ -134,7 +134,7 @@ class DimMethod(IntEnum):
     STEP = 2
 
 
-class AutoMoLi(hass.Hass):  # type: ignore
+class AutoMoLi(Hass):  # type: ignore[misc]
     """Automatic Motion Lights."""
 
     def lg(
@@ -172,9 +172,9 @@ class AutoMoLi(hass.Hass):  # type: ignore
 
                 self.call_service(
                     "logbook/log",
-                    name=ha_name,  # type:ignore
-                    message=message,  # type:ignore
-                    entity_id="light.esszimmer_decke",  # type:ignore
+                    name=ha_name,
+                    message=message,
+                    entity_id="light.esszimmer_decke",
                 )
 
     def listr(
@@ -268,7 +268,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
         if (dim := self.args.pop("dim", {})) and (
             seconds_before := dim.pop("seconds_before", None)
         ):
-
             brightness_step_pct = dim.pop("brightness_step_pct", None)
 
             dim_method: DimMethod | None = None
@@ -283,7 +282,7 @@ class AutoMoLi(hass.Hass):  # type: ignore
             else:
                 dim_method = DimMethod.NONE
 
-            self.dim = {  # type: ignore
+            self.dim = {
                 "brightness_step_pct": brightness_step_pct,
                 "seconds_before": int(seconds_before),
                 "method": dim_method.value,
@@ -299,7 +298,7 @@ class AutoMoLi(hass.Hass):  # type: ignore
             self.args.pop("disable_switch_entities", set())
         )
         self.disable_switch_states: set[str] = self.listr(
-            self.args.pop("disable_switch_states", set(["off"]))
+            self.args.pop("disable_switch_states", {"off"})
         )
 
         # store if an entity has been switched on by automoli
@@ -380,7 +379,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
 
         # enumerate optional sensors & disable optional features if sensors are not available
         for sensor_type in SENSORS_OPTIONAL:
-
             if sensor_type in self.thresholds and self.thresholds[sensor_type]:
                 self.sensors[sensor_type] = self.listr(
                     self.args.pop(sensor_type, None)
@@ -406,7 +404,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
         # set up event listener for each sensor
         listener: set[Coroutine[Any, Any, Any]] = set()
         for sensor in self.sensors[EntityType.MOTION.idx]:
-
             # listen to xiaomi sensors by default
             if not any([self.states["motion_on"], self.states["motion_off"]]):
                 self.lg(
@@ -481,7 +478,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
         if daytime is not None:
             self.active = daytime
             if not kwargs.get("initial"):
-
                 delay = daytime["delay"]
                 light_setting = daytime["light_setting"]
                 if isinstance(light_setting, str):
@@ -610,7 +606,7 @@ class AutoMoLi(hass.Hass):  # type: ignore
             StrictVersion(self.get_ad_version()) >= StrictVersion(required_version)
         )
 
-    async def clear_handles(self, handles: set[str] = None) -> None:
+    async def clear_handles(self, handles: set[str] = None) -> None:  # type: ignore[assignment]
         """clear scheduled timers/callbacks."""
 
         if not handles:
@@ -645,7 +641,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
 
         # if no delay is set or delay = 0, lights will not switched off by AutoMoLi
         if delay := self.active.get("delay"):
-
             self.lg(
                 f"{fnn} {self.active = } | {delay = } | {self.dim = }",
                 level=logging.DEBUG,
@@ -687,15 +682,11 @@ class AutoMoLi(hass.Hass):  # type: ignore
         return False
 
     async def is_blocked(self) -> bool:
-
         # the "shower case"
         if humidity_threshold := self.thresholds.get("humidity"):
-
             for sensor in self.sensors[EntityType.HUMIDITY.idx]:
                 try:
-                    current_humidity = float(
-                        await self.get_state(sensor)  # type:ignore
-                    )
+                    current_humidity = float(await self.get_state(sensor))
                 except ValueError as error:
                     self.lg(
                         f"self.get_state(sensor) raised a ValueError for {sensor}: {error}",
@@ -710,7 +701,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
                 )
 
                 if current_humidity >= humidity_threshold:
-
                     await self.refresh_timer()
                     self.lg(
                         f"🛁 no motion in {hl(self.room.name.capitalize())} since "
@@ -723,7 +713,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
         return False
 
     async def dim_lights(self, _: Any) -> None:
-
         message: str = ""
 
         self.lg(
@@ -746,7 +735,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
             and (dim_method := DimMethod(self.dim["method"]))
             and dim_method != DimMethod.NONE
         ):
-
             seconds_before = int(self.dim["seconds_before"])
             dim_attributes: dict[str, int] = {}
 
@@ -790,11 +778,10 @@ class AutoMoLi(hass.Hass):  # type: ignore
 
             if self.room.lights_undimmable:
                 for light in self.room.lights_dimmable:
-
                     await self.call_service(
                         "light/turn_off",
-                        entity_id=light,  # type:ignore
-                        **dim_attributes,  # type:ignore
+                        entity_id=light,
+                        **dim_attributes,
                     )
                     await self.set_state(entity_id=light, state="off")
 
@@ -829,19 +816,16 @@ class AutoMoLi(hass.Hass):  # type: ignore
         force = bool(force or self.dimming)
 
         if illuminance_threshold := self.thresholds.get(EntityType.ILLUMINANCE.idx):
-
             # the "eco mode" check
             for sensor in self.sensors[EntityType.ILLUMINANCE.idx]:
                 self.lg(
                     f"{stack()[0][3]}: {self.thresholds.get(EntityType.ILLUMINANCE.idx) = } | "
-                    f"{float(await self.get_state(sensor)) = }",  # type:ignore
+                    f"{float(await self.get_state(sensor)) = }",
                     level=logging.DEBUG,
                 )
                 try:
                     if (
-                        illuminance := float(
-                            await self.get_state(sensor)  # type:ignore
-                        )  # type:ignore
+                        illuminance := float(await self.get_state(sensor))
                     ) >= illuminance_threshold:
                         self.lg(
                             f"According to {hl(sensor)} its already bright enough ¯\\_(ツ)_/¯"
@@ -863,7 +847,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
         )
 
         if isinstance(light_setting, str):
-
             # last check until we switch the lights on... really!
             if not force and any(
                 [await self.get_state(light) == "on" for light in self.lights]
@@ -872,14 +855,13 @@ class AutoMoLi(hass.Hass):  # type: ignore
                 return
 
             for entity in self.lights:
-
                 if self.active["is_hue_group"] and await self.get_state(
                     entity_id=entity, attribute="is_hue_group"
                 ):
                     await self.call_service(
                         "hue/hue_activate_scene",
-                        group_name=await self.friendly_name(entity),  # type:ignore
-                        scene_name=light_setting,  # type:ignore
+                        group_name=await self.friendly_name(entity),
+                        scene_name=light_setting,
                     )
                     if self.only_own_events:
                         self._switched_on_by_automoli.add(entity)
@@ -887,9 +869,7 @@ class AutoMoLi(hass.Hass):  # type: ignore
 
                 item = light_setting if light_setting.startswith("scene.") else entity
 
-                await self.call_service(
-                    "homeassistant/turn_on", entity_id=item  # type:ignore
-                )  # type:ignore
+                await self.call_service("homeassistant/turn_on", entity_id=item)
                 if self.only_own_events:
                     self._switched_on_by_automoli.add(item)
 
@@ -902,7 +882,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
             )
 
         elif isinstance(light_setting, int):
-
             if light_setting == 0:
                 await self.lights_off({})
 
@@ -917,13 +896,13 @@ class AutoMoLi(hass.Hass):  # type: ignore
                 for entity in self.lights:
                     if entity.startswith("switch."):
                         await self.call_service(
-                            "homeassistant/turn_on", entity_id=entity  # type:ignore
+                            "homeassistant/turn_on", entity_id=entity
                         )
                     else:
                         await self.call_service(
                             "homeassistant/turn_on",
-                            entity_id=entity,  # type:ignore
-                            brightness_pct=light_setting,  # type:ignore
+                            entity_id=entity,
+                            brightness_pct=light_setting,
                         )
 
                         self.lg(
@@ -970,15 +949,11 @@ class AutoMoLi(hass.Hass):  # type: ignore
         for entity in self.lights:
             if self.only_own_events:
                 if entity in self._switched_on_by_automoli:
-                    await self.call_service(
-                        "homeassistant/turn_off", entity_id=entity  # type:ignore
-                    )  # type:ignore
+                    await self.call_service("homeassistant/turn_off", entity_id=entity)
                     self._switched_on_by_automoli.remove(entity)
                     at_least_one_turned_off = True
             else:
-                await self.call_service(
-                    "homeassistant/turn_off", entity_id=entity  # type:ignore
-                )  # type:ignore
+                await self.call_service("homeassistant/turn_off", entity_id=entity)
                 at_least_one_turned_off = True
         if at_least_one_turned_off:
             self.run_in_thread(self.turned_off, thread=self.notify_thread)
@@ -1041,7 +1016,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
     async def configure_night_mode(
         self, night_mode: dict[str, int | str]
     ) -> dict[str, int | str]:
-
         # check if a enable/disable entity is given and exists
         if not (
             (nm_entity := night_mode.pop("entity"))
@@ -1163,14 +1137,15 @@ class AutoMoLi(hass.Hass):  # type: ignore
 
         self.lg("", log_to_ha=False)
         self.lg(
-            f"{hl(APP_NAME)} v{hl(__version__)}{room}", icon=self.icon, log_to_ha=False
+            f"{hl(APP_NAME)} v{hl(version.__version__)}{room}",
+            icon=self.icon,
+            log_to_ha=False,
         )
         self.lg("", log_to_ha=False)
 
         listeners = self.config.pop("listeners", None)
 
         for key, value in self.config.items():
-
             # hide "internal keys" when displaying config
             if key in ["module", "class"] or key.startswith("_"):
                 continue
@@ -1192,7 +1167,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
     def print_collection(
         self, key: str, collection: Iterable[Any], indentation: int = 0
     ) -> None:
-
         self.lg(f"{indentation * ' '}{key}:", log_to_ha=False)
         indentation = indentation + 2
 
@@ -1200,7 +1174,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
             indent = indentation * " "
 
             if isinstance(item, dict):
-
                 if "name" in item:
                     self.print_collection(item.pop("name", ""), item, indentation)
                 else:
@@ -1209,7 +1182,6 @@ class AutoMoLi(hass.Hass):  # type: ignore
                     )
 
             elif isinstance(collection, dict):
-
                 if isinstance(collection[item], set):
                     self.print_collection(item, collection[item], indentation)
                 else:

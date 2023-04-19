@@ -4,23 +4,23 @@
 
 <!-- [![python_badge](https://img.shields.io/static/v1?label=python&message=3.8%20|%203.9&color=blue&style=flat)](https://www.python.org) [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg)](https://github.com/hacs/integration) -->
 
-Fully *automatic light management* based on motion as [AppDaemon](https://github.com/home-assistant/appdaemon) app.  
+Fully _automatic light management_ based on motion as [AppDaemon](https://github.com/home-assistant/appdaemon) app.
 
-🕓 multiple **daytimes** to define different scenes for morning, noon, ...  
-💡 supports **Hue** (for Hue Rooms/Groups) & **Home Assistant** scenes  
-🔌 switches **lights** and **plugs** (with lights)  
-☀️ supports **illumination sensors** to switch the light just if needed  
-💦 supports **humidity sensors** as blocker (the "*shower case*")  
-🔍 **automatic** discovery of **lights** and **sensors**  
-⛰️ **stable** and **tested** by many people with different homes  
+🕓 multiple **daytimes** to define different scenes for morning, noon, ...
+💡 supports **Hue** (for Hue Rooms/Groups) & **Home Assistant** scenes
+🔌 switches **lights** and **plugs** (with lights)
+☀️ supports **illumination sensors** to switch the light just if needed
+💦 supports **humidity sensors** as blocker (the "_shower case_")
+🔍 **automatic** discovery of **lights** and **sensors**
+⛰️ **stable** and **tested** by many people with different homes
 
 ## Getting Started
 
 ### Docker Image (`amd64`, `arm` and `arm64`)
 
-You can try [**AutoMoLi**](https://github.com/benleb/ad-automoli) via [Docker](https://hub.docker.com/r/benleb/automoli) without installing anything! The Image is the default [AppDaemon](https://github.com/AppDaemon/appdaemon) one with AutoMoLi and a simple default configuration added. See the [AppDaemon Docker Tutorial](https://appdaemon.readthedocs.io/en/latest/DOCKER_TUTORIAL.html) on how to use it in general.  
+You can try [**AutoMoLi**](https://github.com/benleb/ad-automoli) via [Docker](https://hub.docker.com/r/benleb/automoli) without installing anything! The Image is the default [AppDaemon](https://github.com/AppDaemon/appdaemon) one with AutoMoLi and a simple default configuration added. See the [AppDaemon Docker Tutorial](https://appdaemon.readthedocs.io/en/latest/DOCKER_TUTORIAL.html) on how to use it in general.
 
-[**AutoMoLi**](https://github.com/benleb/ad-automoli) expects motion sensors and lights including a `room` name. The exact patterns are listed in [Auto-Discovery of Lights and Sensors](https://github.com/benleb/ad-automoli#auto-discovery-of-lights-and-sensors) You can set a `room` with the **AUTOMOLI_ROOM** variable in the Docker *run* command.
+[**AutoMoLi**](https://github.com/benleb/ad-automoli) expects motion sensors and lights including a `room` name. The exact patterns are listed in [Auto-Discovery of Lights and Sensors](https://github.com/benleb/ad-automoli#auto-discovery-of-lights-and-sensors) You can set a `room` with the **AUTOMOLI_ROOM** variable in the Docker _run_ command.
 
 ```bash
 docker run --rm --interactive --tty --name AutoMoLi \
@@ -35,13 +35,13 @@ Port 5050 is opened to give access to the AppDaemon Admin-UI at <http://127.0.0.
 
 #### Example
 
-To test AutoMoLi in your **Esszimmer** (german for dining room), use `... --env AUTOMOLI_ROOM="esszimmer" ...` in the Docker *run* command.
+To test AutoMoLi in your **Esszimmer** (german for dining room), use `... --env AUTOMOLI_ROOM="esszimmer" ...` in the Docker _run_ command.
 
-* AppDaemon will show you its config file on startup: ![cfg](https://raw.githubusercontent.com/benleb/ad-automoli/master/.github/cfg.png)
+- AppDaemon will show you its config file on startup: ![cfg](https://raw.githubusercontent.com/benleb/ad-automoli/master/.github/cfg.png)
 
-* If everything works, AutoMoLi will show you the configuration it has parsed, including the discovered sensors: ![cfg-loaded](https://raw.githubusercontent.com/benleb/ad-automoli/master/.github/cfg_loaded.png)
+- If everything works, AutoMoLi will show you the configuration it has parsed, including the discovered sensors: ![cfg-loaded](https://raw.githubusercontent.com/benleb/ad-automoli/master/.github/cfg_loaded.png)
 
-* This is how it looks when AutoMoLi manages your lights: ![running](https://raw.githubusercontent.com/benleb/ad-automoli/master/.github/run.png)
+- This is how it looks when AutoMoLi manages your lights: ![running](https://raw.githubusercontent.com/benleb/ad-automoli/master/.github/run.png)
 
 ## Installation
 
@@ -61,7 +61,7 @@ livingroom:
     - input_boolean.disable_my_house
   delay: 600
   daytimes:
-      # This rule "morning" uses a scene, the scene.livingroom_morning Home Assistant scene will be used
+    # This rule "morning" uses a scene, the scene.livingroom_morning Home Assistant scene will be used
     - { starttime: "sunrise", name: morning, light: "scene.livingroom_morning" }
 
     - { starttime: "07:30", name: day, light: "scene.livingroom_working" }
@@ -91,7 +91,6 @@ livingroom:
   humidity:
     - sensor.humidity_128d4101b95fb7
 
-
 bathroom:
   module: automoli
   class: AutoMoLi
@@ -119,49 +118,49 @@ bathroom:
 
 ## Auto-Discovery of Lights and Sensors
 
-[**AutoMoLi**](https://github.com/benleb/ad-automoli) is built around **rooms**. Every room or area in your home is represented as a seperate app in [AppDaemon](https://github.com/AppDaemon/appdaemon) with separat light setting. In your configuration you will have **one config block** for every **room**, see example configuration.  
+[**AutoMoLi**](https://github.com/benleb/ad-automoli) is built around **rooms**. Every room or area in your home is represented as a seperate app in [AppDaemon](https://github.com/AppDaemon/appdaemon) with separat light setting. In your configuration you will have **one config block** for every **room**, see example configuration.
 For the auto-discovery of your lights and sensors to work, AutoMoLi expects motion sensors and lights including a **room** name (can also be something else than a real room) like below:
 
-* *sensor.illumination_`room`*
-* *binary_sensor.motion_sensor_`room`*
-* *binary_sensor.motion_sensor_`room`_something*
-* *light.`room`*
+- _sensor.illumination\_`room`_
+- _binary*sensor.motion_sensor*`room`_
+- _binary*sensor.motion_sensor*`room`\_something_
+- _light.`room`_
 
 AutoMoLi will detect them automatically. Manually configured entities will take precedence.
 
 ## Configuration Options
 
-key | optional | type | default | description
--- | -- | -- | -- | --
-`module` | False | string | automoli | The module name of the app.
-`class` | False | string | AutoMoLi | The name of the Class.
-`room` | False | string | | The "room" used to find matching sensors/light
-`disable_switch_entities` | True | list/string | | One or more Home Assistant Entities as switch for AutoMoLi. If the state of **any** entity is *off*, AutoMoLi is *deactivated*. (Use an *input_boolean* for example)
-`only_own_events` | True | bool | | Track if automoli switched this light on. If not, an existing timer will be deleted and the state will not change
-`disable_switch_states` | True | list/string | ["off"] | Custom states for `disable_switch_entities`. If the state of **any** entity is *in this list*, AutoMoLi is *deactivated*. Can be used to disable with `media_players` in `playing` state for example.
-`disable_hue_groups` | False | boolean | | Disable the use of Hue Groups/Scenes
-`delay` | True | integer | 150 | Seconds without motion until lights will switched off. Can be disabled (lights stay always on) with `0`
-~~`motion_event`~~ | ~~True~~ | ~~string~~ | | **replaced by `motion_state_on/off`**
-`daytimes` | True | list | *see code* | Different daytimes with light settings (see below)
-`transition_on_daytime_switch` | True | bool | False | directly activate a daytime on its start time (instead to just set it as active daytime used if lights are switched from off to on)
-`lights` | True | list/string | *auto detect* | Light entities
-`motion` | True | list/string | *auto detect* | Motion sensor entities
-`illuminance` | True | list/string |  | Illuminance sensor entities
-`illuminance_threshold` | True | integer |  | If illuminance is *above* this value, lights will *not switched on*
-`humidity` | True | list/string |  | Humidity sensor entities
-`humidity_threshold` | True | integer |  | If humidity is *above* this value, lights will *not switched off*
-`motion_state_on` | True | integer | | If using motion sensors which don't send events if already activated, like Xiaomi do, add this to your config with "on". This will listen to state changes instead
-`motion_state_off` | True | integer | | If using motion sensors which don't send events if already activated, like Xiaomi do, add this to your config with "off". This will listen to the state changes instead.
-`debug_log` | True | bool | false | Activate debug logging (for this room)
+| key                            | optional | type        | default       | description                                                                                                                                                                                           |
+| ------------------------------ | -------- | ----------- | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `module`                       | False    | string      | automoli      | The module name of the app.                                                                                                                                                                           |
+| `class`                        | False    | string      | AutoMoLi      | The name of the Class.                                                                                                                                                                                |
+| `room`                         | False    | string      |               | The "room" used to find matching sensors/light                                                                                                                                                        |
+| `disable_switch_entities`      | True     | list/string |               | One or more Home Assistant Entities as switch for AutoMoLi. If the state of **any** entity is _off_, AutoMoLi is _deactivated_. (Use an _input_boolean_ for example)                                  |
+| `only_own_events`              | True     | bool        |               | Track if automoli switched this light on. If not, an existing timer will be deleted and the state will not change                                                                                     |
+| `disable_switch_states`        | True     | list/string | ["off"]       | Custom states for `disable_switch_entities`. If the state of **any** entity is _in this list_, AutoMoLi is _deactivated_. Can be used to disable with `media_players` in `playing` state for example. |
+| `disable_hue_groups`           | False    | boolean     |               | Disable the use of Hue Groups/Scenes                                                                                                                                                                  |
+| `delay`                        | True     | integer     | 150           | Seconds without motion until lights will switched off. Can be disabled (lights stay always on) with `0`                                                                                               |
+| ~~`motion_event`~~             | ~~True~~ | ~~string~~  |               | **replaced by `motion_state_on/off`**                                                                                                                                                                 |
+| `daytimes`                     | True     | list        | _see code_    | Different daytimes with light settings (see below)                                                                                                                                                    |
+| `transition_on_daytime_switch` | True     | bool        | False         | directly activate a daytime on its start time (instead to just set it as active daytime used if lights are switched from off to on)                                                                   |
+| `lights`                       | True     | list/string | _auto detect_ | Light entities                                                                                                                                                                                        |
+| `motion`                       | True     | list/string | _auto detect_ | Motion sensor entities                                                                                                                                                                                |
+| `illuminance`                  | True     | list/string |               | Illuminance sensor entities                                                                                                                                                                           |
+| `illuminance_threshold`        | True     | integer     |               | If illuminance is _above_ this value, lights will _not switched on_                                                                                                                                   |
+| `humidity`                     | True     | list/string |               | Humidity sensor entities                                                                                                                                                                              |
+| `humidity_threshold`           | True     | integer     |               | If humidity is _above_ this value, lights will _not switched off_                                                                                                                                     |
+| `motion_state_on`              | True     | integer     |               | If using motion sensors which don't send events if already activated, like Xiaomi do, add this to your config with "on". This will listen to state changes instead                                    |
+| `motion_state_off`             | True     | integer     |               | If using motion sensors which don't send events if already activated, like Xiaomi do, add this to your config with "off". This will listen to the state changes instead.                              |
+| `debug_log`                    | True     | bool        | false         | Activate debug logging (for this room)                                                                                                                                                                |
 
 ### daytimes
 
-key | optional | type | default | description
--- | -- | -- | -- | --
-`starttime` | False | string | | Time this daytime starts or sunrise|sunset [+|- HH:MM]
-`name` | False | string | | A name for this daytime
-`delay` | True | integer | 150 | Seconds without motion until lights will switched off. Can be disabled (lights stay always on) with `0`. Setting this will overwrite the global `delay` setting for this daytime.
-`light` | False | integer/string | | Light setting (percent integer value (0-100) in or scene entity
+| key         | optional | type           | default | description                                                                                                                                                                       |
+| ----------- | -------- | -------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | -------- |
+| `starttime` | False    | string         |         | Time this daytime starts or sunrise                                                                                                                                               | sunset [+ | - HH:MM] |
+| `name`      | False    | string         |         | A name for this daytime                                                                                                                                                           |
+| `delay`     | True     | integer        | 150     | Seconds without motion until lights will switched off. Can be disabled (lights stay always on) with `0`. Setting this will overwrite the global `delay` setting for this daytime. |
+| `light`     | False    | integer/string |         | Light setting (percent integer value (0-100) in or scene entity                                                                                                                   |
 
 ---
 
@@ -173,7 +172,7 @@ Feel free to add you project! -->
 
 ## Meta
 
-**Ben Lebherz**: *automation lover ⚙️ developer & maintainer* - [@benleb](https://github.com/benleb) | [@ben_leb](https://twitter.com/ben_leb)
+**Ben Lebherz**: _automation lover ⚙️ developer & maintainer_ - [@benleb](https://github.com/benleb) | [@ben_leb](https://twitter.com/ben_leb)
 
 <!-- See also the list of [contributors](CONTRIBUTORS) who participated in this project. -->
 
