@@ -3,8 +3,7 @@ name: Bug report
 about: "[Bug] Create a report to help us improve"
 title: "[BUG] "
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
 <!-- Thanks for reporting a problem for this project. READ THIS FIRST:
@@ -21,21 +20,24 @@ PLEASE RESTART APPDAEMON BEFORE SUBMITTING AN ISSUE
 To reload all modules after an Update it is reqired to restart the AppDaemon Container, as noted in every Release Notes.
 -->
 
-
 ### PROBLEM DESCRIPTION
+
 _A clear and concise description of what the problem is._
 
-
 ### REQUESTED INFORMATION
+
 _Make sure your have performed every step and checked the applicable boxes before submitting your issue. Thank you!_
 
 - [ ] Provide your apps.yaml (or your config):
+
 ```
   apps.yaml here:
 
 
 ```
+
 - [ ] Go to Settings>Add-ons>AppDaemon>Log (or the output of your TS script) and then, provide the output of the log during your issue/bug occurs:
+
 ```
   Log output here:
 
@@ -43,24 +45,25 @@ _Make sure your have performed every step and checked the applicable boxes befor
 ```
 
 ### APPDAEMON CONTEXT
+
 - [ ] AppDaemon Version:
 - [ ] AppDaemon running mode: `virtualenv` `docker` `hassio-plugin` `other`
 - [ ] Python Version:
 - [ ] Home Assistant Version:
 - [ ] Home Assistant running mode: `vm` `docker` `hassio` `other`
 
-
 ### TO REPRODUCE
+
 _Steps to reproduce the behavior:_
 
-
 ### EXPECTED BEHAVIOUR
+
 _A clear and concise description of what you expected to happen._
 
-
 ### SCREENSHOTS
+
 _If applicable, add screenshots/pictures to help explain your problem._
 
-
 ### ADDITIONAL CONTEXT
+
 _Add any other context about the problem here._

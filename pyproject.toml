@@ -1,58 +1,86 @@
-[tool.black]
-target-version = ["py39"]
+[tool.poetry]
+name = "altautomoli"
+version = "1.0.0"
+description = "Fully automatic light management based on motion."
+authors = ["Levi Govaerts <legovaer@me.com>"] # @todo add ben
+license = "MIT"
+packages = [
+    { include = "automoli.py", from = "apps/automoli" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+appdaemon = ">=4.4.1"
+
+[tool.poetry.group.dev.dependencies]
+black = ">=22.12.0"
+commitizen = ">=2.29.3"
+flake8 = ">=5.0.4"
+isort = ">=5.11.4"
+mypy = ">=0.991"
+pre-commit = ">=2.21.0"
+types-mock = ">=5.0.0.0"
+types-PyYAML = ">=6.0.12.2"
+
+[tool.poetry.group.test.dependencies]
+mock = ">=5.0.1"
+pytest = ">=7.2.1"
+pytest-asyncio = ">=0.20.3"
+pytest-cov = ">=4.0.0"
+pytest-mock = ">=3.10.0"
+pytest-timeout = ">=2.1.0"
+
+[tool.poetry.group.docs.dependencies]
+mkdocs-gen-files = ">=0.4.0"
+mkdocs-macros-plugin = ">=0.7.0"
+mkdocs-material = ">=8.2.7"
+setuptools = ">=66.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
-# https://github.com/PyCQA/isort/wiki/isort-Settings
 profile = "black"
-# will group `import x` and `from x import` of the same module.
-combine_as_imports = true
-force_sort_within_sections = true
-forced_separate = [
-  "tests",
-]
-known_first_party = [
-  "hassapi",
-  "appdaemon",
-]
 
-[tool.pylint.MASTER]
-jobs = 4
-load-plugins = [
-  "pylint.extensions.code_style",
-  "pylint.extensions.typing",
-]
-persistent = false
+[tool.black]
+line-length = 88
+exclude = ".git,.hg,.mypy_cache,.tox,_build,buck-out,build,dist"
 
-[tool.pylint."MESSAGES CONTROL"]
-disable = [
-  "attribute-defined-outside-init",
-  "import-outside-toplevel",
-  "wrong-import-position",
-]
+[tool.mypy]
+python_version = "3.8"
+warn_unused_configs = true
+warn_return_any = false
+warn_unreachable = true
+show_error_codes = true
+enable_error_code = ["ignore-without-code"]
+disallow_untyped_decorators = true
+strict = true
 
-[tool.pylint.BASIC]
-class-const-naming-style = "any"
-good-names = [
-  "_",
-  "ev",
-  "ex",
-  "fp",
-  "i",
-  "id",
-  "j",
-  "k",
-  "Run",
-  "T",
+[[tool.mypy.overrides]]
+module = ["appdaemon.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+mock_use_standalone_module = true
+timeout = 5
+asyncio_mode = "auto"
+
+[tool.coverage.report]
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    "pragma: no cover",
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise NotImplementedError",
+    # Logs can be ignored
+    "self.log",
 ]
 
-[tool.pylint.REPORTS]
-score = true
-
-[tool.pylint.TYPECHECK]
-
-[tool.pylint.FORMAT]
-expected-line-ending-format = "LF"
-
-[tool.pylint.TYPING]
-py-version = "3.9"
-runtime-typing = false
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "4.26.2"
+tag_format = "v$major.$minor.$patch$prerelease"
+version_files = [
+    "apps/automoli/version.py",
+    "pyproject.toml:version"
+]
