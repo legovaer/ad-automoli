@@ -1,6 +1,6 @@
 """AutoMoLi.
    Automatic Motion Lights
-  @benleb / https://github.com/benleb/ad-automoli
+  @legovaer / https://github.com/legovaer/ad-automoli
 """
 
 from __future__ import annotations

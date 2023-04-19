@@ -1,0 +1,5 @@
+{
+  "terminal.explorerKind": "external",
+  "terminal.integrated.defaultProfile.windows": "Ubuntu-22.04 (WSL)",
+  "terminal.integrated.fontFamily": "Menlo for Powerline"
+}

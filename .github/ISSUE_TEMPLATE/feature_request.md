@@ -1,23 +1,32 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
-title: ''
+about: "[Feature Request] Suggest an idea for this project"
+title: "[Feature Request] "
 labels: ''
 assignees: ''
 
 ---
 
-🙄 **Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+<!-- Thanks for reporting a problem for this project. READ THIS FIRST:
 
-😍 **Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+DO NOT DELETE ANY TEXT from this template! Otherwise the issue will be auto-closed.
 
-<!-- **Describe if you know about this feature from other projects you've considered**
-A clear and concise description of any alternative solutions or features you've considered. -->
+This issue template is meant to ASK FOR NEW FEATURES ONLY
 
-🖼️ **Example/See here!** 
-List other projects implementing a (similar) feature or other information and links that help to describe your requested feature.
+Please take a few minutes to complete the requested information below.
+Our ability to provide assistance is greatly hampered without it.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+-->
+
+### FEATURE DESCRIPTION
+_A clear and concise description of what the feature should do. Ex. I'm always frustrated when
+[...]_
+
+
+### EXAMPLES
+_List other projects implementing a (similar) feature or other information and links that help to
+describe your requested feature._
+
+
+### ADDITIONAL CONTEXT
+_Add any other context about the problem here._

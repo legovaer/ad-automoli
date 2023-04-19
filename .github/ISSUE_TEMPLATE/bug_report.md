@@ -1,40 +1,66 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
+about: "[Bug] Create a report to help us improve"
+title: "[BUG] "
+labels: bug
 assignees: ''
 
 ---
 
-<!-- 
-Hello, thanks for reporting this!
-Please complete the following information (by replacing the examples)
+<!-- Thanks for reporting a problem for this project. READ THIS FIRST:
+
+DO NOT DELETE ANY TEXT from this template! Otherwise the issue will be auto-closed.
+
+
+This issue template is meant to REPORT BUGS/PROBLEMS ONLY
+
+Please take a few minutes to complete the requested information below.
+The ability to provide assistance is greatly hampered without it.
+
+PLEASE RESTART APPDAEMON BEFORE SUBMITTING AN ISSUE
+To reload all modules after an Update it is reqired to restart the AppDaemon Container, as noted in every Release Notes.
 -->
 
-😩 **Describe the issue/bug**
-A clear and concise description of what the bug is.
 
-😒 **Expected behavior**
-A clear and concise description of what you expected to happen.
+### PROBLEM DESCRIPTION
+_A clear and concise description of what the problem is._
 
-🎛️ **Configuration**
-```yaml
-[relevant configuration from your apps.yml file]
+
+### REQUESTED INFORMATION
+_Make sure your have performed every step and checked the applicable boxes before submitting your issue. Thank you!_
+
+- [ ] Provide your apps.yaml (or your config):
+```
+  apps.yaml here:
+
+
+```
+- [ ] Go to Settings>Add-ons>AppDaemon>Log (or the output of your TS script) and then, provide the output of the log during your issue/bug occurs:
+```
+  Log output here:
+
+
 ```
 
-🧠 **System**
- - AppDaemon: **[e.g. 4.0.5]**
-   -  running mode: **[e.g. virtualenv, hassio-plugin, docker]**
- - Home-Assistant: **[e.g. 0.118.3, 0.119.0b0]**
-   -  running mode: **[e.g. virtualenv, hassio, docker]**
- - Python: **[e.g. 3.8.6, 3.9]**
+### APPDAEMON CONTEXT
+- [ ] AppDaemon Version:
+- [ ] AppDaemon running mode: `virtualenv` `docker` `hassio-plugin` `other`
+- [ ] Python Version:
+- [ ] Home Assistant Version:
+- [ ] Home Assistant running mode: `vm` `docker` `hassio` `other`
 
-🗒️ **Logs** <!-- please use logs with "debug_log: true", thanks! -->
 
-```log
-log log log...
-```
+### TO REPRODUCE
+_Steps to reproduce the behavior:_
 
-🧁 **Additional context**
-Add any other context about the problem here.
+
+### EXPECTED BEHAVIOUR
+_A clear and concise description of what you expected to happen._
+
+
+### SCREENSHOTS
+_If applicable, add screenshots/pictures to help explain your problem._
+
+
+### ADDITIONAL CONTEXT
+_Add any other context about the problem here._

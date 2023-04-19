@@ -1,5 +1,7 @@
 {
-    "name": "💡 AutoMoLi - Auto Motion Lights",
-    "country": "DE",
-    "render_readme": "true"
+    "name": "💡 AltAutoMoLi - Alternative Auto Motion Lights",
+    "render_readme": true,
+    "homeassistant": "2023.4.0",
+    "zip_release": true,
+    "filename": "automoli.zip"
 }
